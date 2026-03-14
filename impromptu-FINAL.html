@@ -1557,7 +1557,7 @@ function hideSettings(e) {
 // SCREENS
 // ═══════════════════════════════════════════════════════════════
 
-const SCREENS = ["home","choose","prep","speech","feedback","settings","apikey"];
+const SCREENS = ["home","choose","prep","speech","feedback","settings","apikey","tournament"];
 
 function show(id) {
   SCREENS.forEach(s => {
@@ -1638,7 +1638,7 @@ function enterCat(name) {
 
 function updateChoiceTimer() {
   const t = S.choiceT, total = S.timers.choice;
-  const cfg = CATS_CONFIG[S.cat];
+  const cfg = CATS_CONFIG[S.cat] || { color: "#f97316" };
   const urgent = t <= Math.min(10, total * 0.25);
   const col = urgent ? "#ef4444" : cfg.color;
   document.getElementById("choice-timer").textContent = t;
