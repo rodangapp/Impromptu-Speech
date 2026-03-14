@@ -1975,7 +1975,7 @@ function renderTournamentSession(session) {
   });
 }
 
-function startTournRound(ri) {
+function startTournRound(ri) {var _r=_tournSession.rounds[idx];CATS_CONFIG[_r.name]=CATS_CONFIG[_r.name]||{color:"#f97316",label:_r.name};
   const session = window._tournSession;
   const round = session.rounds[ri];
   if (!round || !round.topics.length) return;
