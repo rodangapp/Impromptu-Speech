@@ -3,19 +3,22 @@ const fs = require("fs");
 const path = require("path");
 const PORT = process.env.PORT || 3000;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+
 const server = http.createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
+
   if (req.method === "GET") {
-    const htmlPath = path.join(__dirname, "app.html");
+    const htmlPath = path.join(__dirname, "impromptu-FINAL.html");
     if (fs.existsSync(htmlPath)) {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       res.end(fs.readFileSync(htmlPath));
-    } else { res.writeHead(404); res.end("App not deployed yet"); }
+    } else { res.writeHead(404); res.end("App not found"); }
     return;
   }
+
   if (req.method !== "POST") { res.writeHead(405); res.end(JSON.stringify({ error: "Method not allowed" })); return; }
   res.setHeader("Content-Type", "application/json");
   let body = "";
