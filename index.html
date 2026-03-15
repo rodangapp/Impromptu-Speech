@@ -2109,6 +2109,19 @@ async function callBackend(payload) {
 }
 
 async function getFeedback() {
+  // Guest session counter - allow 10 free sessions before requiring sign-up
+  if (!window._user) {
+    const used = parseInt(localStorage.getItem("guest_sessions") || "0");
+    if (used >= 10) {
+      // Show sign-up prompt
+      document.getElementById("fb-btn").style.display = "none";
+      const err = document.getElementById("fb-error");
+      err.style.display = "block";
+      err.innerHTML = '<div style="text-align:center;padding:8px 0"><div style="font-size:22px;font-weight:800;margin-bottom:8px">You\'ve used your 10 free sessions!</div><div style="color:#64748b;font-size:14px;margin-bottom:20px;line-height:1.6">Create a free account to get 10 more credits and keep practicing.</div><button onclick="show(\'auth\')" style="background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:14px;padding:16px 32px;font-size:16px;font-weight:700;color:white;cursor:pointer;width:100%;margin-bottom:10px">Create Free Account</button><button onclick="show(\'auth\')" style="background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">Already have an account? Sign in</button></div>';
+      return;
+    }
+    localStorage.setItem("guest_sessions", used + 1);
+  }
   document.getElementById("fb-btn").style.display = "none";
   document.getElementById("fb-loading").style.display = "block";
   document.getElementById("fb-error").style.display = "none";
