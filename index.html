@@ -2507,10 +2507,9 @@ _supabase.auth.onAuthStateChange(async (event, session) => {
   if (session) {
     _session = session;
     _user = session.user;
-    startApp();
-  } else {
-    show("auth");
   }
+  // Always start the app - guests get 10 free sessions before being asked to sign up
+  startApp();
 })();
 
 // Enter key on auth form
