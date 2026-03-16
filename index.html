@@ -739,6 +739,7 @@ textarea.text-input { min-height: 100px; resize: vertical; }
     </div>
     <div class="divider"></div>
     <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+    <button onclick="saveSettings();showBuyCredits()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:14px;padding:16px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 16px rgba(249,115,22,0.3)">&#9889; Buy More Credits</button>
     <div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px;padding-top:14px;border-top:1px solid #e2e8f0">
       <img src="data:image/png;base64,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" alt="Rodang" style="height:18px;width:auto;opacity:0.7"/>
       <span style="font-size:11px;color:#94a3b8;font-weight:500">A Rodang App</span>
@@ -2518,5 +2519,88 @@ document.addEventListener("keydown", e => {
 });
 
 </script>
+
+<!-- BUY CREDITS MODAL -->
+<div id="screen-buy" class="modal-overlay" onclick="hideBuyCredits(event)" style="display:none">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="hideBuyCredits()">x</button>
+    <div class="modal-title">Buy Credits</div>
+    <div class="modal-sub">Each credit = one AI feedback session</div>
+    <div id="buy-error" style="background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);border-radius:10px;padding:12px;color:#b91c1c;font-size:13px;margin-bottom:14px;display:none"></div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+      <button onclick="startCheckout('PRICE_20')" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif;transition:border-color 0.2s" onmouseover="this.style.borderColor='#f97316'" onmouseout="this.style.borderColor='#e2e8f0'">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:800;font-size:18px">20 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.10 per session</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f97316">$1.99</div>
+        </div>
+      </button>
+      <button onclick="startCheckout('PRICE_60')" style="background:linear-gradient(135deg,#fff7ed,#fff);border:2px solid #f97316;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif;position:relative">
+        <div style="position:absolute;top:-10px;left:16px;background:#f97316;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:100px">BEST VALUE</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:800;font-size:18px">60 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.08 per session</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f97316">$4.99</div>
+        </div>
+      </button>
+      <button onclick="startCheckout('PRICE_150')" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif;transition:border-color 0.2s" onmouseover="this.style.borderColor='#f97316'" onmouseout="this.style.borderColor='#e2e8f0'">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:800;font-size:18px">150 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.07 per session</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f97316">$9.99</div>
+        </div>
+      </button>
+    </div>
+    <div style="text-align:center;color:#94a3b8;font-size:12px">Secure payment via Stripe</div>
+  </div>
+</div>
+
+<script>
+const STRIPE_PRICES = {
+  PRICE_20:  "price_1TBNUxRP3iAnI0YEFMA6id6q",
+  PRICE_60:  "price_1TBNVrRP3iAnI0YEAfbro6nJ",
+  PRICE_150: "price_1TBNWMRP3iAnI0YE1bHiCWlk"
+};
+
+function showBuyCredits() {
+  if (!window._user) { show("auth"); return; }
+  document.getElementById("screen-buy").style.display = "flex";
+  document.getElementById("buy-error").style.display = "none";
+}
+function hideBuyCredits(e) {
+  if (!e || e.target === document.getElementById("screen-buy"))
+    document.getElementById("screen-buy").style.display = "none";
+}
+async function startCheckout(priceKey) {
+  const priceId = STRIPE_PRICES[priceKey];
+  const errEl = document.getElementById("buy-error");
+  if (priceId.startsWith("REPLACE")) {
+    errEl.textContent = "Payments coming soon!";
+    errEl.style.display = "block";
+    return;
+  }
+  try {
+    errEl.style.display = "none";
+    const res = await fetch("/.netlify/functions/stripe/checkout", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({priceId, userId: window._user.id, userEmail: window._user.email})
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else throw new Error(data.error || "Could not start checkout");
+  } catch(err) {
+    errEl.textContent = "Error: " + err.message;
+    errEl.style.display = "block";
+  }
+}
+// Handle return from Stripe
+const _up = new URLSearchParams(window.location.search);
+if (_up.get("payment") === "success") {
+  setTimeout(async () => {
+    if (typeof loadCredits === "function") await loadCredits();
+    alert("Payment successful! Your credits have been added.");
+    window.history.replaceState({}, "", window.location.pathname);
+  }, 2000);
+}
+</script>
+
 </body>
 </html>
