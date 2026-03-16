@@ -2518,47 +2518,12 @@ document.addEventListener("keydown", e => {
   if (e.key === "Enter" && document.getElementById("screen-auth").style.display !== "none") handleEmailAuth();
 });
 
-</script>
-
-<!-- BUY CREDITS MODAL -->
-<div id="screen-buy" class="modal-overlay" onclick="hideBuyCredits(event)" style="display:none">
-  <div class="modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="hideBuyCredits()">x</button>
-    <div class="modal-title">Buy Credits</div>
-    <div class="modal-sub">Each credit = one AI feedback session</div>
-    <div id="buy-error" style="background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);border-radius:10px;padding:12px;color:#b91c1c;font-size:13px;margin-bottom:14px;display:none"></div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
-      <button onclick="startCheckout('PRICE_20')" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif;transition:border-color 0.2s" onmouseover="this.style.borderColor='#f97316'" onmouseout="this.style.borderColor='#e2e8f0'">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-weight:800;font-size:18px">20 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.10 per session</div></div>
-          <div style="font-size:22px;font-weight:800;color:#f97316">$1.99</div>
-        </div>
-      </button>
-      <button onclick="startCheckout('PRICE_60')" style="background:linear-gradient(135deg,#fff7ed,#fff);border:2px solid #f97316;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif;position:relative">
-        <div style="position:absolute;top:-10px;left:16px;background:#f97316;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:100px">BEST VALUE</div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-weight:800;font-size:18px">60 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.08 per session</div></div>
-          <div style="font-size:22px;font-weight:800;color:#f97316">$4.99</div>
-        </div>
-      </button>
-      <button onclick="startCheckout('PRICE_150')" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif;transition:border-color 0.2s" onmouseover="this.style.borderColor='#f97316'" onmouseout="this.style.borderColor='#e2e8f0'">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-weight:800;font-size:18px">150 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.07 per session</div></div>
-          <div style="font-size:22px;font-weight:800;color:#f97316">$9.99</div>
-        </div>
-      </button>
-    </div>
-    <div style="text-align:center;color:#94a3b8;font-size:12px">Secure payment via Stripe</div>
-  </div>
-</div>
-
-<script>
+// ── STRIPE / BUY CREDITS ────────────────────────────────────
 const STRIPE_PRICES = {
   PRICE_20:  "price_1TBNUxRP3iAnI0YEFMA6id6q",
   PRICE_60:  "price_1TBNVrRP3iAnI0YEAfbro6nJ",
   PRICE_150: "price_1TBNWMRP3iAnI0YE1bHiCWlk"
 };
-
 function showBuyCredits() {
   if (!window._user) { show("auth"); return; }
   document.getElementById("screen-buy").style.display = "flex";
@@ -2586,15 +2551,46 @@ async function startCheckout(priceKey) {
     errEl.style.display = "block";
   }
 }
-const _up = new URLSearchParams(window.location.search);
-if (_up.get("payment") === "success") {
+const _stripeParams = new URLSearchParams(window.location.search);
+if (_stripeParams.get("payment") === "success") {
   setTimeout(async () => {
     if (typeof loadCredits === "function") await loadCredits();
     alert("Payment successful! Your credits have been added.");
     window.history.replaceState({}, "", window.location.pathname);
   }, 2000);
 }
-</script>
 
+</script>
+<!-- BUY CREDITS MODAL -->
+<div id="screen-buy" class="modal-overlay" onclick="hideBuyCredits(event)" style="display:none">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="hideBuyCredits()">x</button>
+    <div class="modal-title">Buy Credits</div>
+    <div class="modal-sub">Each credit = one AI feedback session</div>
+    <div id="buy-error" style="background:rgba(220,38,38,0.06);border:1px solid rgba(220,38,38,0.2);border-radius:10px;padding:12px;color:#b91c1c;font-size:13px;margin-bottom:14px;display:none"></div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+      <button onclick="startCheckout('PRICE_20')" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:800;font-size:18px">20 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.10 per session</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f97316">$1.99</div>
+        </div>
+      </button>
+      <button onclick="startCheckout('PRICE_60')" style="background:linear-gradient(135deg,#fff7ed,#fff);border:2px solid #f97316;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif;position:relative">
+        <div style="position:absolute;top:-10px;left:16px;background:#f97316;color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:100px">BEST VALUE</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:800;font-size:18px">60 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.08 per session</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f97316">$4.99</div>
+        </div>
+      </button>
+      <button onclick="startCheckout('PRICE_150')" style="background:#fff;border:1.5px solid #e2e8f0;border-radius:16px;padding:20px;text-align:left;cursor:pointer;font-family:'Outfit',sans-serif">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:800;font-size:18px">150 Credits</div><div style="color:#64748b;font-size:13px;margin-top:2px">$0.07 per session</div></div>
+          <div style="font-size:22px;font-weight:800;color:#f97316">$9.99</div>
+        </div>
+      </button>
+    </div>
+    <div style="text-align:center;color:#94a3b8;font-size:12px">Secure payment via Stripe</div>
+  </div>
+</div>
 </body>
 </html>
