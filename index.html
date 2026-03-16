@@ -1854,7 +1854,7 @@ function hideSettings(e) {
 // SCREENS
 // ═══════════════════════════════════════════════════════════════
 
-const SCREENS = ["home","choose","prep","speech","feedback","settings","apikey","tournament"];
+const SCREENS = ["auth","home","choose","prep","speech","feedback","settings","apikey","tournament","buy"];
 
 function show(id) {
   SCREENS.forEach(s => {
@@ -2571,11 +2571,6 @@ function hideBuyCredits(e) {
 async function startCheckout(priceKey) {
   const priceId = STRIPE_PRICES[priceKey];
   const errEl = document.getElementById("buy-error");
-  if (priceId.startsWith("REPLACE")) {
-    errEl.textContent = "Payments coming soon!";
-    errEl.style.display = "block";
-    return;
-  }
   try {
     errEl.style.display = "none";
     const res = await fetch("/.netlify/functions/stripe/checkout", {
@@ -2591,7 +2586,6 @@ async function startCheckout(priceKey) {
     errEl.style.display = "block";
   }
 }
-// Handle return from Stripe
 const _up = new URLSearchParams(window.location.search);
 if (_up.get("payment") === "success") {
   setTimeout(async () => {
