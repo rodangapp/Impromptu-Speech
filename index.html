@@ -793,7 +793,7 @@ textarea.text-input { min-height: 100px; resize: vertical; }
 // ═══════════════════════════════════════════════════════════════
 
 const TOPICS = {
-  "Quote": [
+  "Quotes": [
     "\"The only thing we have to fear is fear itself.\" — Franklin D. Roosevelt",
     "\"Ask not what your country can do for you — ask what you can do for your country.\" — John F. Kennedy",
     "\"In the end, it's not the years in your life that count. It's the life in your years.\" — Abraham Lincoln",
@@ -979,7 +979,7 @@ const TOPICS = {
     "\"Life can only be understood backwards; but it must be lived forwards.\" — Søren Kierkegaard"
   ],
 
-  "Single Word": [
+  "Single Words": [
     "Integrity","Courage","Resilience","Humility","Compassion","Loyalty","Honesty","Perseverance","Discipline","Empathy",
     "Gratitude","Kindness","Patience","Wisdom","Grace","Dignity","Grit","Virtue","Character","Honor",
     "Identity","Purpose","Belonging","Authenticity","Legacy","Potential","Growth","Ambition","Confidence","Pride",
@@ -1002,7 +1002,7 @@ const TOPICS = {
     "Division","Exclusion","Inclusion","Acceptance","Tolerance","Hatred","Kindness","Cruelty","Generosity","Selfishness"
   ],
 
-  "Proverb": [
+  "Proverbs": [
     "Actions speak louder than words.",
     "The early bird catches the worm.",
     "Don't judge a book by its cover.",
@@ -1356,7 +1356,7 @@ const TOPICS = {
     "Chasing greatness or Defining it yourself"
   ],
 
-  "Open Philosophical Question": [
+  "Open Philosophical Questions": [
     "What makes a person truly successful?",
     "Can someone be both ambitious and content?",
     "Is it more important to be liked or respected?",
@@ -1756,17 +1756,17 @@ const TOPICS = {
 // ═══════════════════════════════════════════════════════════════
 
 const CATS_CONFIG = {
-  "Quote": {
+  "Quotes": {
     color: "#f97316",
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>`,
     desc: "Famous & competition quotes"
   },
-  "Single Word": {
+  "Single Words": {
     color: "#3b82f6",
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>`,
     desc: "Abstract words to explore"
   },
-  "Proverb": {
+  "Proverbs": {
     color: "#8b5cf6",
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
     desc: "Wisdom from world cultures"
@@ -1776,7 +1776,7 @@ const CATS_CONFIG = {
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>`,
     desc: "Two sides, one argument"
   },
-  "Open Philosophical Question": {
+  "Open Philosophical Questions": {
     color: "#f59e0b",
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
     desc: "Deep questions, clear positions"
@@ -2110,6 +2110,16 @@ async function callBackend(payload) {
 }
 
 async function getFeedback() {
+  // Ensure session is loaded before checking (fixes Safari async timing bug)
+  if (!window._user) {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+      _session = session;
+      _user = session.user;
+      window._user = session.user;
+    }
+  }
+
   // Guest session counter - allow 10 free sessions before requiring sign-up
   if (!window._user) {
     const used = parseInt(localStorage.getItem("guest_sessions") || "0");
