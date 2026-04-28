@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0d1b3e"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
-<title>Impromptu Coach — A Rodang App</title>
+<title>Impromptu Coach — A Rodano Labs App</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
@@ -536,7 +536,7 @@ textarea.text-input { min-height: 100px; resize: vertical; }
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:34px;height:34px;fill:white"><path d="M12 2a9 9 0 0 1 9 9c0 3.6-2.1 6.7-5.2 8.2L15 22H9l-.8-2.8C5.1 17.7 3 14.6 3 11a9 9 0 0 1 9-9zm0 2a7 7 0 0 0-7 7c0 2.9 1.7 5.4 4.2 6.6l.5.2.7 2.2h3.2l.7-2.2.5-.2C17.3 16.4 19 13.9 19 11a7 7 0 0 0-7-7zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm-3 6h6v2H9v-2z"/></svg>
   </div>
   <div style="font-size:26px;font-weight:800;margin-bottom:6px">Impromptu Coach</div>
-  <div style="color:#64748b;font-size:14px">AI-powered speech practice by Rodang</div>
+  <div style="color:#64748b;font-size:14px">AI-powered speech practice by Rodano Labs</div>
 </div>
 <div class="auth-card">
   <div class="auth-tabs">
@@ -546,6 +546,16 @@ textarea.text-input { min-height: 100px; resize: vertical; }
   <div id="auth-msg" class="auth-msg"></div>
   <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" type="email" id="auth-email" placeholder="you@example.com" autocomplete="email"/></div>
   <div class="auth-field"><label class="auth-label">Password</label><input class="auth-input" type="password" id="auth-password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password"/></div>
+  <div id="signup-agreement" style="display:none;margin-bottom:16px;padding:14px;background:#fef7ed;border:1px solid #fed7aa;border-radius:12px">
+    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:10px">
+      <input type="checkbox" id="age-checkbox" style="margin-top:3px;width:16px;height:16px;accent-color:#f97316;cursor:pointer;flex-shrink:0"/>
+      <span style="font-size:13px;color:#475569;line-height:1.5">I confirm that I am at least <strong>13 years old</strong>.</span>
+    </label>
+    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer">
+      <input type="checkbox" id="terms-checkbox" style="margin-top:3px;width:16px;height:16px;accent-color:#f97316;cursor:pointer;flex-shrink:0"/>
+      <span style="font-size:13px;color:#475569;line-height:1.5">I agree to the <a href="https://rodanolabs.com/terms" target="_blank" style="color:#f97316;font-weight:600;text-decoration:underline">Terms of Service</a> and <a href="https://rodanolabs.com/privacy" target="_blank" style="color:#f97316;font-weight:600;text-decoration:underline">Privacy Policy</a>.</span>
+    </label>
+  </div>
   <button class="btn-primary" id="auth-submit-btn" onclick="handleEmailAuth()" style="margin-bottom:16px">Sign In</button>
   <div class="auth-divider">or</div>
   <button class="btn-google" onclick="signInWithGoogle()"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>
@@ -608,8 +618,8 @@ textarea.text-input { min-height: 100px; resize: vertical; }
 
   <!-- Rodang branding footer -->
   <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;padding:14px 0;border-top:1px solid #e2e8f0">
-    <img src="data:image/png;base64,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" alt="Rodang" style="height:22px;width:auto;opacity:0.85"/>
-    <span style="font-size:12px;color:#94a3b8;font-weight:500;letter-spacing:0.3px">A Rodang App</span>
+    <img src="data:image/png;base64,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" alt="Rodano Labs" style="height:22px;width:auto;opacity:0.85"/>
+    <span style="font-size:12px;color:#94a3b8;font-weight:500;letter-spacing:0.3px">A Rodano Labs App</span>
   </div>
   <div style="text-align:center;padding:8px 0 16px">
     <button onclick="signOut()" style="background:none;border:none;color:#94a3b8;font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;padding:4px 12px">Sign out</button>
@@ -693,6 +703,31 @@ textarea.text-input { min-height: 100px; resize: vertical; }
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════ AGE GATE ═══ -->
+<div id="screen-agegate" class="modal-overlay" style="display:none;z-index:9999">
+  <div class="modal" style="max-width:380px;text-align:center" onclick="event.stopPropagation()">
+    <div style="width:64px;height:64px;background:linear-gradient(135deg,#f97316,#ea6c10);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 20px rgba(249,115,22,0.3)">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:32px;height:32px;fill:white"><path d="M12 2a9 9 0 0 1 9 9c0 3.6-2.1 6.7-5.2 8.2L15 22H9l-.8-2.8C5.1 17.7 3 14.6 3 11a9 9 0 0 1 9-9zm0 2a7 7 0 0 0-7 7c0 2.9 1.7 5.4 4.2 6.6l.5.2.7 2.2h3.2l.7-2.2.5-.2C17.3 16.4 19 13.9 19 11a7 7 0 0 0-7-7zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm-3 6h6v2H9v-2z"/></svg>
+    </div>
+    <div style="font-size:22px;font-weight:800;margin-bottom:10px">Welcome to Impromptu Coach</div>
+    <div style="color:#64748b;font-size:14px;line-height:1.6;margin-bottom:24px">Before you start, please confirm you are at least 13 years old and agree to our terms.</div>
+
+    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-align:left;padding:12px;background:#fef7ed;border:1px solid #fed7aa;border-radius:12px;margin-bottom:10px">
+      <input type="checkbox" id="agegate-age" style="margin-top:3px;width:16px;height:16px;accent-color:#f97316;cursor:pointer;flex-shrink:0"/>
+      <span style="font-size:13px;color:#475569;line-height:1.5">I confirm that I am at least <strong>13 years old</strong>.</span>
+    </label>
+
+    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-align:left;padding:12px;background:#fef7ed;border:1px solid #fed7aa;border-radius:12px;margin-bottom:18px">
+      <input type="checkbox" id="agegate-terms" style="margin-top:3px;width:16px;height:16px;accent-color:#f97316;cursor:pointer;flex-shrink:0"/>
+      <span style="font-size:13px;color:#475569;line-height:1.5">I agree to the <a href="https://rodanolabs.com/terms" target="_blank" style="color:#f97316;font-weight:600;text-decoration:underline">Terms of Service</a> and <a href="https://rodanolabs.com/privacy" target="_blank" style="color:#f97316;font-weight:600;text-decoration:underline">Privacy Policy</a>.</span>
+    </label>
+
+    <div id="agegate-error" style="color:#dc2626;font-size:13px;margin-bottom:12px;display:none"></div>
+
+    <button class="btn-primary" onclick="acceptAgeGate()">Continue</button>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════════════════════════ SETTINGS MODAL ═══ -->
 <div id="screen-settings" class="modal-overlay" onclick="hideSettings(event)" style="display:none">
   <div class="modal" onclick="event.stopPropagation()">
@@ -740,9 +775,17 @@ textarea.text-input { min-height: 100px; resize: vertical; }
     <div class="divider"></div>
     <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
     <button onclick="saveSettings();showBuyCredits()" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:14px;padding:16px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:white;cursor:pointer;box-shadow:0 4px 16px rgba(249,115,22,0.3)">&#9889; Buy More Credits</button>
+
+    <div class="divider"></div>
+    <div style="display:flex;justify-content:center;gap:18px;margin-bottom:14px">
+      <a href="https://rodanolabs.com/terms" target="_blank" style="font-size:13px;color:#64748b;text-decoration:none;font-weight:500">Terms of Service</a>
+      <span style="color:#cbd5e1">·</span>
+      <a href="https://rodanolabs.com/privacy" target="_blank" style="font-size:13px;color:#64748b;text-decoration:none;font-weight:500">Privacy Policy</a>
+    </div>
+    <button onclick="deleteAccount()" id="delete-account-btn" style="display:none;width:100%;background:none;border:1px solid #fecaca;color:#dc2626;border-radius:12px;padding:12px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:10px">Delete my account</button>
     <div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:16px;padding-top:14px;border-top:1px solid #e2e8f0">
-      <img src="data:image/png;base64,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" alt="Rodang" style="height:18px;width:auto;opacity:0.7"/>
-      <span style="font-size:11px;color:#94a3b8;font-weight:500">A Rodang App</span>
+      <img src="data:image/png;base64,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" alt="Rodano Labs" style="height:18px;width:auto;opacity:0.7"/>
+      <span style="font-size:11px;color:#94a3b8;font-weight:500">A Rodano Labs App</span>
     </div>
   </div>
 </div>
@@ -1841,7 +1884,54 @@ function showSettings() {
   document.getElementById("s-choice-val").textContent = fmtT(S.timers.choice);
   document.getElementById("s-prep-val").textContent = fmtT(S.timers.prep);
   document.getElementById("s-speech-val").textContent = fmtT(S.timers.speech);
+  // Show delete account button only when logged in
+  const delBtn = document.getElementById("delete-account-btn");
+  if (delBtn) delBtn.style.display = window._user ? "block" : "none";
   document.getElementById("screen-settings").style.display = "flex";
+}
+
+async function deleteAccount() {
+  if (!window._user) return;
+
+  const confirm1 = confirm(
+    "Are you sure you want to delete your account?\n\n" +
+    "This will permanently delete:\n" +
+    "• Your account and login\n" +
+    "• Your remaining credits\n" +
+    "• All your practice history\n\n" +
+    "This cannot be undone."
+  );
+  if (!confirm1) return;
+
+  const typed = prompt('Type "DELETE" (in capital letters) to confirm:');
+  if (typed !== "DELETE") {
+    alert("Account not deleted.");
+    return;
+  }
+
+  try {
+    // Call backend to delete user data
+    const response = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + _session.access_token
+      },
+      body: JSON.stringify({ mode: "delete_account" })
+    });
+
+    if (response.ok) {
+      await _supabase.auth.signOut();
+      alert("Your account has been deleted. Thank you for using Impromptu Coach.");
+      window.location.reload();
+    } else {
+      const err = await response.json().catch(() => ({}));
+      alert("Could not delete account: " + (err.error || "Please email hello@rodanolabs.com for help.") +
+            "\n\nYou can also email us directly at hello@rodanolabs.com to request deletion.");
+    }
+  } catch (e) {
+    alert("Could not connect to delete your account. Please email hello@rodanolabs.com to request deletion and we will handle it within 48 hours.");
+  }
 }
 
 function hideSettings(e) {
@@ -2439,6 +2529,7 @@ function switchTab(mode) {
   document.getElementById("tab-signup").classList.toggle("active", mode === "signup");
   document.getElementById("auth-submit-btn").textContent = mode === "signin" ? "Sign In" : "Create Account";
   document.getElementById("auth-msg").style.display = "none";
+  document.getElementById("signup-agreement").style.display = mode === "signup" ? "block" : "none";
 }
 
 async function handleEmailAuth() {
@@ -2446,6 +2537,15 @@ async function handleEmailAuth() {
   const password = document.getElementById("auth-password").value;
   const btn = document.getElementById("auth-submit-btn");
   if (!email || !password) { showAuthMsg("Please enter your email and password.", "error"); return; }
+
+  // Validate signup checkboxes
+  if (_authMode === "signup") {
+    const ageOk = document.getElementById("age-checkbox").checked;
+    const termsOk = document.getElementById("terms-checkbox").checked;
+    if (!ageOk) { showAuthMsg("You must confirm that you are at least 13 years old.", "error"); return; }
+    if (!termsOk) { showAuthMsg("You must agree to the Terms of Service and Privacy Policy.", "error"); return; }
+  }
+
   btn.disabled = true;
   btn.textContent = _authMode === "signin" ? "Signing in..." : "Creating account...";
   if (_authMode === "signin") {
@@ -2494,6 +2594,36 @@ async function loadCredits() {
 }
 
 function startApp() {
+  // First-time age gate — required for guests AND logged-in users on first visit
+  // Skipped for users who already accepted it OR who already signed up (signup form already gates them)
+  if (!localStorage.getItem("agegate_accepted") && !window._user) {
+    document.getElementById("screen-agegate").style.display = "flex";
+    return;
+  }
+  loadTimers();
+  buildHome();
+  show("home");
+  loadCredits();
+}
+
+function acceptAgeGate() {
+  const ageOk = document.getElementById("agegate-age").checked;
+  const termsOk = document.getElementById("agegate-terms").checked;
+  const err = document.getElementById("agegate-error");
+
+  if (!ageOk) {
+    err.textContent = "You must confirm that you are at least 13 years old.";
+    err.style.display = "block";
+    return;
+  }
+  if (!termsOk) {
+    err.textContent = "You must agree to the Terms of Service and Privacy Policy.";
+    err.style.display = "block";
+    return;
+  }
+
+  localStorage.setItem("agegate_accepted", new Date().toISOString());
+  document.getElementById("screen-agegate").style.display = "none";
   loadTimers();
   buildHome();
   show("home");
