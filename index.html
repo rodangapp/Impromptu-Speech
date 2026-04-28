@@ -1996,6 +1996,28 @@ function buildHome() {
 // ═══════════════════════════════════════════════════════════════
 
 function enterCat(name) {
+  // Check session limit BEFORE letting them record
+  // Logged-in users have unlimited sessions (limited by credits, checked at feedback time)
+  if (!window._user) {
+    const used = parseInt(localStorage.getItem("guest_sessions") || "0");
+    if (used >= 10) {
+      // Save what category they wanted so we can return them here after sign-up
+      localStorage.setItem("intended_category", name);
+      show("auth");
+      // Show a friendly message on the auth screen
+      const msg = document.getElementById("auth-msg");
+      if (msg) {
+        msg.style.display = "block";
+        msg.style.background = "#fff7ed";
+        msg.style.color = "#9a3412";
+        msg.style.border = "1px solid #fed7aa";
+        msg.textContent = "You've used your 10 free sessions! Create a free account to get 10 more credits.";
+      }
+      // Default to signup tab
+      switchTab("signup");
+      return;
+    }
+  }
 
   clrAll();
   loadTimers();
@@ -2210,17 +2232,9 @@ async function getFeedback() {
     }
   }
 
-  // Guest session counter - allow 10 free sessions before requiring sign-up
+  // Increment guest session counter (upfront check at category selection prevents > 10)
   if (!window._user) {
     const used = parseInt(localStorage.getItem("guest_sessions") || "0");
-    if (used >= 10) {
-      // Show sign-up prompt
-      document.getElementById("fb-btn").style.display = "none";
-      const err = document.getElementById("fb-error");
-      err.style.display = "block";
-      err.innerHTML = '<div style="text-align:center;padding:8px 0"><div style="font-size:22px;font-weight:800;margin-bottom:8px">You\'ve used your 10 free sessions!</div><div style="color:#64748b;font-size:14px;margin-bottom:20px;line-height:1.6">Create a free account to get 10 more credits and keep practicing.</div><button onclick="show(\'auth\')" style="background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:14px;padding:16px 32px;font-size:16px;font-weight:700;color:white;cursor:pointer;width:100%;margin-bottom:10px">Create Free Account</button><button onclick="show(\'auth\')" style="background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">Already have an account? Sign in</button></div>';
-      return;
-    }
     localStorage.setItem("guest_sessions", used + 1);
   }
   document.getElementById("fb-btn").style.display = "none";
@@ -2278,11 +2292,69 @@ function renderFeedback(fb) {
       <div style="font-weight:700;font-size:11px;color:#64748b;letter-spacing:1px;margin-bottom:6px">🗣️ DELIVERY</div>
       <div style="font-size:14px;color:#1a1a2e;line-height:1.7">${fb.deliveryFeedback||""}</div>
     </div>
-    <div style="background:linear-gradient(135deg,#fff8f3,#fff);border:2px solid #f97316;border-radius:16px;padding:20px;margin-bottom:24px">
+    <div style="background:linear-gradient(135deg,#fff8f3,#fff);border:2px solid #f97316;border-radius:16px;padding:20px;margin-bottom:16px">
       <div style="font-weight:700;font-size:12px;color:#f97316;letter-spacing:1px;margin-bottom:8px">⭐ COACH'S GOLDEN TIP</div>
       <div style="font-size:16px;color:#1a1a2e;line-height:1.7;font-style:italic">${fb.coachTip||""}</div>
     </div>
+    <button id="email-transcript-btn" onclick="emailTranscript()" style="width:100%;background:#fff;border:1.5px solid #e2e8f0;color:#1a1a2e;border-radius:14px;padding:14px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email me this transcript & feedback
+    </button>
   `;
+  // Save the latest feedback so we can email it
+  window._lastFeedback = fb;
+}
+
+async function emailTranscript() {
+  if (!window._user) {
+    alert("Please sign in to receive emails of your transcripts.");
+    show("auth");
+    return;
+  }
+
+  const fb = window._lastFeedback;
+  if (!fb) {
+    alert("No feedback to email.");
+    return;
+  }
+
+  const btn = document.getElementById("email-transcript-btn");
+  if (!btn) return;
+  const originalHTML = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = "Sending...";
+
+  try {
+    const response = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + _session.access_token
+      },
+      body: JSON.stringify({
+        mode: "email_transcript",
+        topic: S.topic,
+        category: S.cat,
+        transcript: S.transcript || "No transcript available.",
+        feedback: fb,
+        userEmail: window._user.email
+      })
+    });
+
+    if (response.ok) {
+      btn.innerHTML = "✓ Sent! Check your inbox.";
+      btn.style.background = "#f0fdf4";
+      btn.style.borderColor = "#bbf7d0";
+      btn.style.color = "#16a34a";
+    } else {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || "Could not send email");
+    }
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+    alert("Could not send email: " + e.message + "\n\nThis feature will be fully working soon. Email hello@rodanolabs.com if you need help.");
+  }
 }
 
 
@@ -2635,9 +2707,17 @@ _supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === "SIGNED_IN" && session) {
     _session = session;
     _user = session.user;
+    window._user = session.user;
     startApp();
+    // If guest hit session 11 wall and signed up, send them straight into their intended category
+    const intended = localStorage.getItem("intended_category");
+    if (intended && CATS_CONFIG[intended]) {
+      localStorage.removeItem("intended_category");
+      setTimeout(() => enterCat(intended), 200);
+    }
   } else if (event === "SIGNED_OUT") {
     _user = null; _session = null;
+    window._user = null;
     show("auth");
   }
 });
