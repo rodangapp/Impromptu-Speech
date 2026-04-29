@@ -1,11 +1,11 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { createClient } = require("@supabase/supabase-js");
 
-// Credit amounts per price
+// Credit amounts per price (LIVE MODE)
 const CREDITS = {
-  ["price_1TBNUxRP3iAnI0YEFMA6id6q"]:  20,
-  ["price_1TBNVrRP3iAnI0YEAfbro6nJ"]:  60,
-  ["price_1TBNWMRP3iAnI0YE1bHiCWlk"]: 150,
+  ["price_1TRZCcREBzybwd3H9Z1rb3cN"]:  20,   // 20 credits — $1.99
+  ["price_1TRZCdREBzybwd3HJkfA8MMZ"]:  60,   // 60 credits — $4.99
+  ["price_1TRZCbREBzybwd3H2XJjdzJq"]: 150,   // 150 credits — $9.99
 };
 
 exports.handler = async (event) => {
