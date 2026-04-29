@@ -5,7 +5,7 @@ const { createClient } = require("@supabase/supabase-js");
 const CREDITS = {
   ["price_1TRZCcREBzybwd3H9Z1rb3cN"]:  20,   // 20 credits — $1.99
   ["price_1TRZCdREBzybwd3HJkfA8MMZ"]:  60,   // 60 credits — $4.99
-  ["price_1TRZCbREBzybwd3H2XJjdzJq"]: 150,   // 150 credits — $9.99
+  ["price_1TRZCdREBzybwd3HJkfA8MMZ"]: 150,   // 150 credits — $9.99
 };
 
 exports.handler = async (event) => {
