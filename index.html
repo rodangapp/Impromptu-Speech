@@ -2110,6 +2110,31 @@ function updatePrepTimer() {
 }
 
 function goSpeech() {
+  // Check if guest before wasting their time recording
+  if (!window._user) {
+    const used = parseInt(localStorage.getItem("guest_sessions") || "0");
+    if (used >= 10) {
+      show("auth");
+      switchTab("signup");
+      const msg = document.getElementById("auth-msg");
+      if (msg) {
+        msg.style.display = "block";
+        msg.style.background = "#fff7ed";
+        msg.style.color = "#9a3412";
+        msg.style.border = "1px solid #fed7aa";
+        msg.textContent = "You've used your 10 free sessions! Create a free account to get 10 more credits.";
+      }
+      return;
+    }
+    // Show a friendly heads-up before they record
+    const proceed = confirm("⚡ Sign in to get AI feedback on your speech!\n\nYou can still record without an account, but you'll need to create a free account to get AI coaching.\n\nTap OK to continue recording, or Cancel to sign up first.");
+    if (!proceed) {
+      show("auth");
+      switchTab("signup");
+      return;
+    }
+  }
+
   clrAll();
   S.speechT = S.timers.speech;
   S.transcript = "";
@@ -2232,11 +2257,34 @@ async function getFeedback() {
     }
   }
 
-  // Increment guest session counter (upfront check at category selection prevents > 10)
+  // If still no user after session check, show signup prompt instead of calling backend
   if (!window._user) {
     const used = parseInt(localStorage.getItem("guest_sessions") || "0");
-    localStorage.setItem("guest_sessions", used + 1);
+    if (used >= 10) {
+      // Already at limit — redirect to signup
+      show("auth");
+      switchTab("signup");
+      const msg = document.getElementById("auth-msg");
+      if (msg) {
+        msg.style.display = "block";
+        msg.style.background = "#fff7ed";
+        msg.style.color = "#9a3412";
+        msg.style.border = "1px solid #fed7aa";
+        msg.textContent = "You've used your 10 free sessions! Create a free account to get 10 more credits.";
+      }
+      return;
+    }
+    // Under 10 — show signup prompt to get feedback
+    document.getElementById("fb-btn").style.display = "none";
+    const err = document.getElementById("fb-error");
+    err.style.display = "block";
+    err.innerHTML = '<div style="text-align:center;padding:8px 0"><div style="font-size:20px;font-weight:800;margin-bottom:8px">Sign in to get AI feedback 🎤</div><div style="color:#64748b;font-size:14px;margin-bottom:20px;line-height:1.6">Create a free account to get AI coaching on your speech. You\'ll get 10 free credits — no card required.</div><button onclick="show(\'auth\');switchTab(\'signup\')" style="background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:14px;padding:16px 32px;font-size:16px;font-weight:700;color:white;cursor:pointer;width:100%;margin-bottom:10px">Create Free Account</button><button onclick="show(\'auth\');switchTab(\'signin\')" style="background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">Already have an account? Sign in</button></div>';
+    return;
   }
+
+  // Increment guest session counter (upfront check at category selection prevents > 10)
+  localStorage.setItem("guest_sessions", parseInt(localStorage.getItem("guest_sessions") || "0") + 1);
+
   document.getElementById("fb-btn").style.display = "none";
   document.getElementById("fb-loading").style.display = "block";
   document.getElementById("fb-error").style.display = "none";
@@ -2253,9 +2301,14 @@ async function getFeedback() {
     document.getElementById("fb-loading").style.display = "none";
     const err = document.getElementById("fb-error");
     err.style.display = "block";
-    err.textContent = "⚠️ " + e.message;
-    document.getElementById("fb-btn").style.display = "block";
-    document.getElementById("fb-btn").textContent = "Try Again";
+    // Check if it's an auth error and show signup prompt instead
+    if (e.message.includes("401") || e.message.includes("Not logged in") || e.message.includes("Session expired")) {
+      err.innerHTML = '<div style="text-align:center;padding:8px 0"><div style="font-size:20px;font-weight:800;margin-bottom:8px">Sign in to get AI feedback 🎤</div><div style="color:#64748b;font-size:14px;margin-bottom:20px;line-height:1.6">Create a free account to get AI coaching on your speech. You\'ll get 10 free credits — no card required.</div><button onclick="show(\'auth\');switchTab(\'signup\')" style="background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:14px;padding:16px 32px;font-size:16px;font-weight:700;color:white;cursor:pointer;width:100%;margin-bottom:10px">Create Free Account</button><button onclick="show(\'auth\');switchTab(\'signin\')" style="background:none;border:none;color:#64748b;font-size:13px;cursor:pointer;font-family:Outfit,sans-serif">Already have an account? Sign in</button></div>';
+    } else {
+      err.textContent = "⚠️ " + e.message;
+      document.getElementById("fb-btn").style.display = "block";
+      document.getElementById("fb-btn").textContent = "Try Again";
+    }
   }
 }
 
